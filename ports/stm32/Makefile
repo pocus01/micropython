@@ -185,6 +185,7 @@ EXTMOD_SRC_C = $(addprefix extmod/,\
         )
 
 DRIVERS_SRC_C = $(addprefix drivers/,\
+	bus/softqspi.c \
 	memory/spiflash.c \
 	dht/dht.c \
 	)
@@ -213,6 +214,7 @@ SRC_C = \
 	dma.c \
 	i2c.c \
 	spi.c \
+	qspi.c \
 	uart.c \
 	can.c \
 	usb.c \
