@@ -29,10 +29,13 @@ def setup():
     print("Performing initial setup")
     uos.VfsFat.mkfs(bdev)
     vfs = uos.VfsFat(bdev)
-    uos.mount(vfs, '/flash')
-    uos.chdir('/flash')
+    uos.mount(vfs, '/')
     with open("boot.py", "w") as f:
         f.write("""\
 # This file is executed on every boot (including wake-boot from deepsleep)
+#import esp
+#esp.osdebug(None)
+#import webrepl
+#webrepl.start()
 """)
     return vfs

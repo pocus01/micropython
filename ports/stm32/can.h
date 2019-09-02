@@ -28,11 +28,13 @@
 
 #define PYB_CAN_1 (1)
 #define PYB_CAN_2 (2)
+#define PYB_CAN_3 (3)
 
 extern const mp_obj_type_t pyb_can_type;
 
 void can_init0(void);
 void can_deinit(void);
 void can_rx_irq_handler(uint can_id, uint fifo_id);
+void can_sce_irq_handler(uint can_id);
 
 #endif // MICROPY_INCLUDED_STM32_CAN_H

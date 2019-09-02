@@ -47,8 +47,11 @@ typedef unsigned int uint;
 #endif
 
 // Classical double-indirection stringification of preprocessor macro's value
-#define _MP_STRINGIFY(x) #x
-#define MP_STRINGIFY(x) _MP_STRINGIFY(x)
+#define MP_STRINGIFY_HELPER(x) #x
+#define MP_STRINGIFY(x) MP_STRINGIFY_HELPER(x)
+
+// Static assertion macro
+#define MP_STATIC_ASSERT(cond) ((void)sizeof(char[1 - 2 * !(cond)]))
 
 /** memory allocation ******************************************/
 
@@ -203,20 +206,6 @@ void vstr_vprintf(vstr_t *vstr, const char *fmt, va_list ap);
 int DEBUG_printf(const char *fmt, ...);
 
 extern mp_uint_t mp_verbose_flag;
-
-// This is useful for unicode handling. Some CPU archs has
-// special instructions for efficient implementation of this
-// function (e.g. CLZ on ARM).
-// NOTE: this function is unused at the moment
-#ifndef count_lead_ones
-static inline mp_uint_t count_lead_ones(byte val) {
-    mp_uint_t c = 0;
-    for (byte mask = 0x80; val & mask; mask >>= 1) {
-        c++;
-    }
-    return c;
-}
-#endif
 
 /** float internals *************/
 

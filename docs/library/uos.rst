@@ -43,11 +43,11 @@ Filesystem access
 
 .. function:: ilistdir([dir])
 
-   This function returns an iterator which then yields 3-tuples corresponding to
+   This function returns an iterator which then yields tuples corresponding to
    the entries in the directory that it is listing.  With no argument it lists the
    current directory, otherwise it lists the directory given by *dir*.
 
-   The 3-tuples have the form *(name, type, inode)*:
+   The tuples have the form *(name, type, inode[, size])*:
 
     - *name* is a string (or bytes if *dir* is a bytes object) and is the name of
       the entry;
@@ -55,6 +55,10 @@ Filesystem access
       directories and 0x8000 for regular files;
     - *inode* is an integer corresponding to the inode of the file, and may be 0
       for filesystems that don't have such a notion.
+    - Some platforms may return a 4-tuple that includes the entry's *size*.  For
+      file entries, *size* is an integer representing the size of the file
+      or -1 if unknown.  Its meaning is currently undefined for directory
+      entries.
 
 .. function:: listdir([dir])
 
@@ -111,7 +115,8 @@ Terminal redirection and duplication
 .. function:: dupterm(stream_object, index=0)
 
    Duplicate or switch the MicroPython terminal (the REPL) on the given `stream`-like
-   object. The *stream_object* argument must implement the ``readinto()`` and
+   object. The *stream_object* argument must be a native stream object, or derive
+   from ``uio.IOBase`` and implement the ``readinto()`` and
    ``write()`` methods.  The stream should be in non-blocking mode and
    ``readinto()`` should return ``None`` if there is no data available for reading.
 
@@ -189,14 +194,16 @@ used by a particular filesystem driver to store the data for its filesystem.
 
     .. method:: readblocks(block_num, buf)
 
-        Starting at *block_num*, read blocks from the device into *buf* (an array
-        of bytes).  The number of blocks to read is given by the length of *buf*,
+        Starting at the block given by the index *block_num*, read blocks from
+        the device into *buf* (an array of bytes).
+        The number of blocks to read is given by the length of *buf*,
         which will be a multiple of the block size.
 
     .. method:: writeblocks(block_num, buf)
 
-        Starting at *block_num*, write blocks from *buf* (an array of bytes) to
-        the device.  The number of blocks to write is given by the length of *buf*,
+        Starting at the block given by the index *block_num*, write blocks from
+        *buf* (an array of bytes) to the device.
+        The number of blocks to write is given by the length of *buf*,
         which will be a multiple of the block size.
 
     .. method:: ioctl(op, arg)
